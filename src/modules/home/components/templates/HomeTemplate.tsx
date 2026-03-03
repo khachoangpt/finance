@@ -168,7 +168,7 @@ const HomeTemplate = ({ goldPrices, pricesRange }: Props) => {
   return (
     <div>
       <Card>
-        <CardContent className="flex">
+        <CardContent className="flex flex-wrap">
           <div className="flex-1">
             <div className="flex items-center justify-between">
               <DatePicker
