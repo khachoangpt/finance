@@ -184,7 +184,9 @@ const HomeTemplate = ({ goldPrices, pricesRange }: Props) => {
                   <div className="flex items-start">
                     <div className="w-20">Mua vào</div>
                     <div className="font-semibold">
-                      {formatNumber(goldPrices.prices.SJL1L10.buy)}
+                      <div className="text-base">
+                        {formatNumber(goldPrices.prices.SJL1L10.buy)}
+                      </div>
                       <div
                         className={cn("", {
                           "text-[#d50606]":
@@ -202,7 +204,9 @@ const HomeTemplate = ({ goldPrices, pricesRange }: Props) => {
                   <div className="flex items-start">
                     <div className="w-20">Bán ra</div>
                     <div className="font-semibold">
-                      {formatNumber(goldPrices.prices.SJL1L10.sell)}
+                      <div className="text-base">
+                        {formatNumber(goldPrices.prices.SJL1L10.sell)}
+                      </div>
                       <div
                         className={cn("", {
                           "text-[#d50606]":
