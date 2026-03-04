@@ -183,7 +183,7 @@ const HomeTemplate = ({ goldPrices, pricesRange }: Props) => {
               <div className="flex-1">
                 <DataTable columns={columns} data={goldTypes} />
               </div>
-              <div className="max-md:mt-4 bg-white flex items-center rounded-sm">
+              <div className="flex-1 max-md:mt-4 bg-white flex items-center rounded-sm">
                 <LineChart
                   style={{
                     width: "100%",
