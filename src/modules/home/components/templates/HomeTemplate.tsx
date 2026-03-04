@@ -166,11 +166,11 @@ const HomeTemplate = ({ goldPrices, pricesRange }: Props) => {
   };
 
   return (
-    <div>
+    <div className="p-3">
       <Card>
-        <CardContent className="md:flex">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center justify-between">
+        <CardContent>
+          <div>
+            <div className="flex items-center justify-between mb-2">
               <DatePicker
                 disabled={{
                   after: new Date(),
@@ -179,66 +179,68 @@ const HomeTemplate = ({ goldPrices, pricesRange }: Props) => {
                 onChange={handleChangeDate}
               />
             </div>
-            <div>
-              <DataTable columns={columns} data={goldTypes} />
+            <div className="md:flex items-center gap-x-4">
+              <div className="flex-1">
+                <DataTable columns={columns} data={goldTypes} />
+              </div>
+              <div className="max-md:mt-4 bg-white flex items-center rounded-sm">
+                <LineChart
+                  style={{
+                    width: "100%",
+                    maxWidth: "700px",
+                    maxHeight: "70vh",
+                    aspectRatio: 1.618,
+                  }}
+                  responsive
+                  data={pricesRange.map((item: any) => {
+                    return {
+                      buy: item.prices.SJL1L10.buy,
+                      sell: item.prices.SJL1L10.sell,
+                      name: format(item.date, "dd/MM"),
+                    };
+                  })}
+                  margin={{
+                    top: 5,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis
+                    tickFormatter={formatNumber}
+                    domain={["dataMin", "dataMax"]}
+                    width="auto"
+                  />
+                  <Tooltip
+                    formatter={(value) => {
+                      return [formatNumber(value as number)];
+                    }}
+                  />
+                  <Legend />
+                  <Line
+                    animationDuration={3000}
+                    strokeWidth={2}
+                    type="monotone"
+                    dataKey="buy"
+                    name="Mua vào"
+                    stroke="#d50606"
+                    isAnimationActive={true}
+                  />
+                  <Line
+                    animationDuration={3000}
+                    strokeWidth={2}
+                    type="monotone"
+                    dataKey="sell"
+                    name="Bán ra"
+                    stroke="#08a845"
+                    isAnimationActive={true}
+                  />
+                  <RechartsDevtools />
+                </LineChart>
+              </div>
             </div>
-          </div>
-          <div className="flex-1 flex items-center">
-            <LineChart
-              style={{
-                width: "100%",
-                maxWidth: "700px",
-                maxHeight: "70vh",
-                aspectRatio: 1.618,
-              }}
-              responsive
-              data={pricesRange.map((item: any) => {
-                return {
-                  buy: item.prices.SJL1L10.buy,
-                  sell: item.prices.SJL1L10.sell,
-                  name: format(item.date, "dd/MM"),
-                };
-              })}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis
-                tickFormatter={formatNumber}
-                domain={["dataMin", "dataMax"]}
-                width="auto"
-              />
-              <Tooltip
-                formatter={(value) => {
-                  return [formatNumber(value as number)];
-                }}
-              />
-              <Legend />
-              <Line
-                animationDuration={3000}
-                strokeWidth={2}
-                type="monotone"
-                dataKey="buy"
-                name="Mua vào"
-                stroke="#d50606"
-                isAnimationActive={true}
-              />
-              <Line
-                animationDuration={3000}
-                strokeWidth={2}
-                type="monotone"
-                dataKey="sell"
-                name="Bán ra"
-                stroke="#08a845"
-                isAnimationActive={true}
-              />
-              <RechartsDevtools />
-            </LineChart>
           </div>
         </CardContent>
       </Card>

@@ -34,7 +34,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div
-      className="min-w-0 overflow-x-auto overflow-y-auto rounded-md border"
+      className="min-w-0 overflow-x-auto bg-white overflow-y-auto rounded-md border"
       style={{ maxHeight }}
     >
       <table
