@@ -168,8 +168,8 @@ const HomeTemplate = ({ goldPrices, pricesRange }: Props) => {
   return (
     <div>
       <Card>
-        <CardContent className="flex flex-wrap">
-          <div className="flex-1">
+        <CardContent className="md:flex">
+          <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between">
               <DatePicker
                 disabled={{
@@ -187,7 +187,6 @@ const HomeTemplate = ({ goldPrices, pricesRange }: Props) => {
             <LineChart
               style={{
                 width: "100%",
-                minWidth: "400px",
                 maxWidth: "700px",
                 maxHeight: "70vh",
                 aspectRatio: 1.618,

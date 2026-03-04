@@ -18,11 +18,13 @@ import {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  maxHeight?: string;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  maxHeight = "400px",
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -31,9 +33,15 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="overflow-auto rounded-md border">
-      <Table>
-        <TableHeader>
+    <div
+      className="min-w-0 overflow-x-auto overflow-y-auto rounded-md border"
+      style={{ maxHeight }}
+    >
+      <table
+        data-slot="table"
+        className="min-w-full w-max caption-bottom text-sm"
+      >
+        <TableHeader className="sticky top-0 z-10 bg-background">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
@@ -73,7 +81,7 @@ export function DataTable<TData, TValue>({
             </TableRow>
           )}
         </TableBody>
-      </Table>
+      </table>
     </div>
   );
 }
