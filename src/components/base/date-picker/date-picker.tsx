@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { ChevronDownIcon } from "lucide-react";
 import { useState } from "react";
 import type { Matcher } from "react-day-picker";
+import { vi } from "react-day-picker/locale";
 import { Button } from "../button";
 import { Calendar } from "../calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "../popover";
@@ -26,13 +27,18 @@ const DatePicker = ({ date, onChange, disabled }: Props) => {
             data-empty={!date}
             className="min-w-53 justify-between text-left font-normal data-[empty=true]:text-muted-foreground"
           >
-            {date ? format(date, "PPP") : <span>Pick a date</span>}
+            {date ? (
+              format(date, "P", { locale: vi })
+            ) : (
+              <span>Pick a date</span>
+            )}
             <ChevronDownIcon data-icon="inline-end" />
           </Button>
         }
       />
-      <PopoverContent className="w-auto p-0 bg-white" align="start">
+      <PopoverContent className="w-auto p-0" align="start">
         <Calendar
+          locale={vi}
           mode="single"
           selected={date}
           onSelect={(value) => {

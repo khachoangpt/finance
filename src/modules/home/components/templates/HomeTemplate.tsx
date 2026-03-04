@@ -3,6 +3,7 @@
 import { RechartsDevtools } from "@recharts/devtools";
 import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
+import { ChevronRight } from "lucide-react";
 import { useState } from "react";
 import {
   CartesianGrid,
@@ -39,10 +40,10 @@ const HomeTemplate = ({ goldPrices, pricesRange }: Props) => {
   };
 
   const goldTypes: { value: string; label: string }[] = [
-    // {
-    //   value: "XAUUSD",
-    //   label: "Giá vàng thế giới (XAU/USD)",
-    // },
+    {
+      value: "XAUUSD",
+      label: "Giá vàng thế giới (XAU/USD)",
+    },
     {
       value: "SJL1L10",
       label: "Vàng miếng SJC 9999",
@@ -136,7 +137,7 @@ const HomeTemplate = ({ goldPrices, pricesRange }: Props) => {
           goldPricesData.prices[row.original.value].change_sell;
         return (
           <div>
-            <div>{formatNumber(sell)}</div>
+            <div>{sell ? formatNumber(sell) : ""}</div>
             {changeSell ? (
               <div
                 className={cn("", {
@@ -165,83 +166,152 @@ const HomeTemplate = ({ goldPrices, pricesRange }: Props) => {
     return pricesRange.json();
   };
 
+  const [collapse, setCollapse] = useState(true);
+
   return (
     <div className="p-3">
-      <Card>
+      <Card
+        className={cn("transition-all duration-300", {
+          "w-full": !collapse,
+          "sm:w-fit": collapse,
+        })}
+      >
         <CardContent>
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <DatePicker
-                disabled={{
-                  after: new Date(),
-                }}
-                date={date}
-                onChange={handleChangeDate}
-              />
-            </div>
-            <div className="md:flex items-center gap-x-4">
-              <div className="flex-1">
-                <DataTable columns={columns} data={goldTypes} />
+          {collapse ? (
+            <div className="flex items-center justify-between gap-x-4">
+              <div className="space-y-3">
+                <div>
+                  <div className="flex items-start">
+                    <div className="w-20">Mua vào</div>
+                    <div className="font-semibold">
+                      {formatNumber(goldPrices.prices.SJL1L10.buy)}
+                      <div
+                        className={cn("", {
+                          "text-[#d50606]":
+                            goldPrices.prices.SJL1L10.change_buy < 0,
+                          "text-[#08a845]":
+                            goldPrices.prices.SJL1L10.change_buy > 0,
+                        })}
+                      >
+                        {formatNumber(goldPrices.prices.SJL1L10.change_buy)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div className="flex items-start">
+                    <div className="w-20">Bán ra</div>
+                    <div className="font-semibold">
+                      {formatNumber(goldPrices.prices.SJL1L10.sell)}
+                      <div
+                        className={cn("", {
+                          "text-[#d50606]":
+                            goldPrices.prices.SJL1L10.change_sell < 0,
+                          "text-[#08a845]":
+                            goldPrices.prices.SJL1L10.change_sell > 0,
+                        })}
+                      >
+                        {formatNumber(goldPrices.prices.SJL1L10.change_sell)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="flex-1 max-md:mt-4 bg-white flex items-center rounded-sm">
-                <LineChart
-                  style={{
-                    width: "100%",
-                    maxWidth: "700px",
-                    maxHeight: "70vh",
-                    aspectRatio: 1.618,
+              <button
+                type="button"
+                className="cursor-pointer"
+                onClick={() => {
+                  if (!collapse) return;
+                  setCollapse((prev) => !prev);
+                }}
+              >
+                <ChevronRight />
+              </button>
+            </div>
+          ) : (
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <DatePicker
+                  disabled={{
+                    after: new Date(),
                   }}
-                  responsive
-                  data={pricesRange.map((item: any) => {
-                    return {
-                      buy: item.prices.SJL1L10.buy,
-                      sell: item.prices.SJL1L10.sell,
-                      name: format(item.date, "dd/MM"),
-                    };
-                  })}
-                  margin={{
-                    top: 5,
-                    right: 30,
-                    left: 20,
-                    bottom: 5,
+                  date={date}
+                  onChange={handleChangeDate}
+                />
+                <button
+                  type="button"
+                  className="cursor-pointer"
+                  onClick={() => {
+                    setCollapse((prev) => !prev);
                   }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis
-                    tickFormatter={formatNumber}
-                    domain={["dataMin", "dataMax"]}
-                    width="auto"
-                  />
-                  <Tooltip
-                    formatter={(value) => {
-                      return [formatNumber(value as number)];
+                  Thu nhỏ
+                </button>
+              </div>
+              <div className="md:flex items-center gap-x-4">
+                <div className="flex-1">
+                  <DataTable columns={columns} data={goldTypes} />
+                </div>
+                <div className="flex-1 max-md:mt-4 flex items-center rounded-sm">
+                  <LineChart
+                    style={{
+                      width: "100%",
+                      maxWidth: "700px",
+                      maxHeight: "70vh",
+                      aspectRatio: 1.618,
                     }}
-                  />
-                  <Legend />
-                  <Line
-                    animationDuration={3000}
-                    strokeWidth={2}
-                    type="monotone"
-                    dataKey="buy"
-                    name="Mua vào"
-                    stroke="#d50606"
-                    isAnimationActive={true}
-                  />
-                  <Line
-                    animationDuration={3000}
-                    strokeWidth={2}
-                    type="monotone"
-                    dataKey="sell"
-                    name="Bán ra"
-                    stroke="#08a845"
-                    isAnimationActive={true}
-                  />
-                  <RechartsDevtools />
-                </LineChart>
+                    responsive
+                    data={pricesRange.map((item: any) => {
+                      return {
+                        buy: item.prices.SJL1L10.buy,
+                        sell: item.prices.SJL1L10.sell,
+                        name: format(item.date, "dd/MM"),
+                      };
+                    })}
+                    margin={{
+                      top: 5,
+                      right: 30,
+                      left: 20,
+                      bottom: 5,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis
+                      tickFormatter={formatNumber}
+                      domain={["dataMin", "dataMax"]}
+                      width="auto"
+                    />
+                    <Tooltip
+                      formatter={(value) => {
+                        return [formatNumber(value as number)];
+                      }}
+                    />
+                    <Legend />
+                    <Line
+                      animationDuration={3000}
+                      strokeWidth={2}
+                      type="monotone"
+                      dataKey="buy"
+                      name="Mua vào"
+                      stroke="#d50606"
+                      isAnimationActive={true}
+                    />
+                    <Line
+                      animationDuration={3000}
+                      strokeWidth={2}
+                      type="monotone"
+                      dataKey="sell"
+                      name="Bán ra"
+                      stroke="#08a845"
+                      isAnimationActive={true}
+                    />
+                    <RechartsDevtools />
+                  </LineChart>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </CardContent>
       </Card>
     </div>
