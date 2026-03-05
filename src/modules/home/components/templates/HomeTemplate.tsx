@@ -287,6 +287,9 @@ const HomeTemplate = ({ goldPrices, pricesRange }: Props) => {
                       width="auto"
                     />
                     <Tooltip
+                      contentStyle={{
+                        backgroundColor: "var(--background)",
+                      }}
                       formatter={(value) => {
                         return [formatNumber(value as number)];
                       }}
